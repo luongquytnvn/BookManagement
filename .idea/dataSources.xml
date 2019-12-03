@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="book_manager@localhost" uuid="9f11a453-31ac-4abf-8531-7aa68be4e22f">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/book_manager?useUnicode=yes&amp;charactorEncoding=UTF-8</jdbc-url>
+    </data-source>
+  </component>
+</project>
