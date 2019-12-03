@@ -4,17 +4,19 @@ import com.codegym.models.Book;
 import com.codegym.models.Category;
 import com.codegym.services.BookService;
 import com.codegym.services.CategoryServices;
+import org.hibernate.boot.model.source.spi.Sortable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class BookController {
@@ -39,12 +41,14 @@ public class BookController {
         model.addAttribute("books", books);
         return "books/list";
     }
+
     @GetMapping("book-list-date")
-    public String bookListByDate(Model model, @PageableDefault(size = 5,sort = "dateOfPurchase") Pageable pageable) {
+    public String bookListByDate(Model model, @PageableDefault(size = 5, direction = Sort.Direction.DESC, sort = "dateOfPurchase") Pageable pageable) {
         Page<Book> books = bookService.findAll(pageable);
         model.addAttribute("books", books);
         return "books/list";
     }
+
     @GetMapping("book-list-price")
     public String bookListByPrice(Model model, @PageableDefault(size = 5, sort = "price") Pageable pageable) {
         Page<Book> books = bookService.findAll(pageable);
@@ -104,5 +108,21 @@ public class BookController {
         Page<Book> books = bookService.finByCategory(category, pageable);
         model.addAttribute("books", books);
         return "books/list-book-by-category";
+    }
+
+    @PostMapping("/book-search")
+    public String bookSearch(@RequestParam("search") String search, Model model, @PageableDefault(size = 5) Pageable pageable) {
+        if (search == null) {
+            return "redirect:/book-list";
+        }
+        Page<Book> books = bookService.findAll(pageable);
+        List<Book> result = new ArrayList<>();
+        for (Book book : books) {
+            if (book.getName().toLowerCase().contains(search.toLowerCase())) {
+                result.add(book);
+            }
+        }
+        model.addAttribute("books", result);
+        return "books/list";
     }
 }
